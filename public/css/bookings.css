@@ -1,0 +1,12 @@
+/* Booking form: room picker and live summary */
+.room-floor{margin-top:16px}
+.room-floor h4{display:flex;justify-content:space-between;align-items:center;margin:0 0 8px;font-size:12px;color:var(--muted)}
+.room-grid{display:flex;flex-wrap:wrap;gap:8px}
+.room-pick{position:relative;display:block}
+.room-pick input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.room-pick span{display:block;min-width:58px;padding:8px 12px;text-align:center;font-weight:700;font-size:13px;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.room-pick input:checked + span{background:var(--emerald);border-color:var(--emerald);color:#fff}
+.room-pick input:focus-visible + span{outline:2px solid var(--gold);outline-offset:2px}
+.picker-tools{display:flex;gap:8px;margin-top:6px}
+.summary-bar{display:flex;flex-wrap:wrap;gap:18px;margin:18px 0 4px;padding:14px 16px;background:var(--emerald-soft);border-radius:12px;font-size:13px}
+.summary-bar b{font-size:16px}

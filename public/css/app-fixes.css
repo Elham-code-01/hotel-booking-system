@@ -1,0 +1,33 @@
+/* The sidebar must scroll when there are more menu items than the screen is tall. */
+.sidebar{overflow-y:auto;overscroll-behavior:contain}
+.sidebar > *{flex-shrink:0}
+.sidebar .nav-link{min-height:38px}
+
+.balance-due{color:var(--danger);font-weight:700}
+.balance-credit{color:var(--emerald);font-weight:700}
+
+@media print{
+  .sidebar,.topbar,.mobile-backdrop,.head-actions,.toolbar,.flash-region,.btn{display:none !important}
+  .main{margin:0 !important;width:100% !important}
+  .content{padding:0 !important}
+  .panel,.stat-card{break-inside:avoid;box-shadow:none !important}
+}
+
+/* Hotels page */
+.chip-row{display:flex;flex-wrap:wrap;gap:10px}
+.chip-link{display:inline-flex;align-items:baseline;gap:8px;padding:10px 16px;border:1px solid var(--line);border-radius:12px;background:var(--surface);font-weight:700}
+.chip-link small{font-weight:500;opacity:.75}
+.chip-link.active{background:var(--emerald);border-color:var(--emerald);color:#fff}
+.room-chip{display:inline-block;min-width:58px;padding:8px 12px;text-align:center;font-weight:700;font-size:13px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.room-chip.occupied{background:var(--emerald);border-color:var(--emerald);color:#fff}
+.room-chip.arriving{background:#dbe8fb;border-color:#9bbbe9;color:#1c4a8a}
+.room-chip.departing{background:#fdebc8;border-color:#e6c27a;color:#7a4e00}
+.room-chip.turnover{background:#e8dcf7;border-color:#c3a8e8;color:#4a2a82}
+.room-chip.double{background:var(--danger);border-color:var(--danger);color:#fff}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin:0 0 6px;font-size:12px;color:var(--muted)}
+
+/* Hotel representative page */
+.room-pick.occupied span{background:var(--emerald-soft);border-color:var(--emerald)}
+.room-pick.checked_out span{opacity:.5;text-decoration:line-through}
+.rep-form .toolbar{margin-top:14px}
+.rep-note{font-size:12px;color:var(--muted);margin-top:8px}

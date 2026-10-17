@@ -1,0 +1,6 @@
+/* Extra styles for the sign-in / registration pages */
+.auth-error{display:block;margin-top:6px;color:var(--danger);font-size:12px}
+.auth-check{display:flex;gap:8px;align-items:center;margin-top:14px;font-size:12px;color:var(--muted)}
+.password-control input{flex:1;min-width:0;border-top-right-radius:0;border-bottom-right-radius:0}
+.password-toggle{border-top-left-radius:0;border-bottom-left-radius:0;min-width:58px}
+.login-card .btn-primary{cursor:pointer}
