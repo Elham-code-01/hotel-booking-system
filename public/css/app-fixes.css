@@ -31,3 +31,9 @@
 .room-pick.checked_out span{opacity:.5;text-decoration:line-through}
 .rep-form .toolbar{margin-top:14px}
 .rep-note{font-size:12px;color:var(--muted);margin-top:8px}
+
+/* Dashboard and reports */
+.meter{height:8px;margin:10px 0 12px;border-radius:99px;background:var(--line);overflow:hidden}
+.meter > span{display:block;height:100%;background:var(--emerald)}
+.big-percent{font-size:34px;font-weight:800;line-height:1}
+.report-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}

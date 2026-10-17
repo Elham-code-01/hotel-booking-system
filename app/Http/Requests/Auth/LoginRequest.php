@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Auth;
 
 use App\Models\User;
+use App\Support\Audit;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -39,6 +40,8 @@ class LoginRequest extends FormRequest
         if (! Auth::attempt($credentials, $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
+            Audit::record('login.failed', ['email' => $this->string('email')->lower()->toString()]);
+
             $user = User::where('email', $this->string('email')->lower()->toString())->first();
 
             if ($user && $user->status === 'pending' && Hash::check($this->string('password')->toString(), $user->password)) {
@@ -62,6 +65,8 @@ class LoginRequest extends FormRequest
         }
 
         event(new Lockout($this));
+
+        Audit::record('login.locked', ['email' => $this->string('email')->lower()->toString()]);
 
         $seconds = RateLimiter::availableIn($this->throttleKey());
 

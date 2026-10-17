@@ -7,7 +7,10 @@ use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use App\Support\Audit;
 use Illuminate\Validation\Rule;
 
 class UserAdminController extends Controller
@@ -58,7 +61,7 @@ class UserAdminController extends Controller
         // forceFill: role, status and hotel are never mass-assignable from a form.
         $user->forceFill($data)->save();
 
-        Log::info('user.updated', [
+        Audit::record('user.updated', [
             'by'     => $request->user()->email,
             'target' => $user->email,
             'role'   => $data['role'],
@@ -67,5 +70,30 @@ class UserAdminController extends Controller
         ]);
 
         return back()->with('success', $user->name.' was updated.');
+    }
+
+    /**
+     * Gives a user a temporary password, signs them out everywhere and forces a new password at the next sign-in.
+     * The temporary password is shown once, to the administrator only.
+     */
+    public function resetPassword(Request $request, User $user): RedirectResponse
+    {
+        if ($user->is($request->user())) {
+            return back()->with('error', 'Use "My profile" to change your own password.');
+        }
+
+        $temporary = Str::password(14, symbols: false);
+
+        $user->forceFill([
+            'password'             => Hash::make($temporary),
+            'must_change_password' => true,
+            'remember_token'       => Str::random(60),
+        ])->save();
+
+        DB::table('sessions')->where('user_id', $user->id)->delete();
+
+        Audit::record('user.password_reset', ['target' => $user->email]);
+
+        return back()->with('temp_password', ['name' => $user->name, 'email' => $user->email, 'password' => $temporary]);
     }
 }

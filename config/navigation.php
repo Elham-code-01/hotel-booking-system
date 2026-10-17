@@ -24,8 +24,9 @@ return [
         ['route' => 'company-account',   'label' => 'Company account',      'icon' => '▧', 'roles' => ['admin', 'staff', 'viewer']],
         ['route' => 'payments',          'label' => 'Payments',             'icon' => '$', 'roles' => ['admin', 'staff'], 'routes' => ['payments', 'payments.store']],
         ['route' => 'other-charges',     'label' => 'Other charges',        'icon' => '＋', 'roles' => ['admin', 'staff'], 'routes' => ['other-charges', 'other-charges.store']],
-        ['route' => 'reports',           'label' => 'Reports',              'icon' => '▥', 'roles' => ['admin', 'staff', 'viewer']],
-        ['route' => 'users.index',       'label' => 'Users',                'icon' => '◉', 'roles' => ['admin'], 'routes' => ['users.index', 'users.update']],
+        ['route' => 'reports',           'label' => 'Reports',              'icon' => '▥', 'roles' => ['admin', 'staff', 'viewer'], 'routes' => ['reports', 'reports.csv']],
+        ['route' => 'users.index',       'label' => 'Users',                'icon' => '◉', 'roles' => ['admin'], 'routes' => ['users.index', 'users.update', 'users.password']],
+        ['route' => 'audit',             'label' => 'Activity log',         'icon' => '☷', 'roles' => ['admin']],
         ['route' => 'settings',          'label' => 'Settings',             'icon' => '⚙', 'roles' => ['admin'], 'routes' => ['settings', 'settings.update']],
 
         // Hidden rules: not shown in the sidebar, they only guard buttons and forms.

@@ -7,7 +7,7 @@ use App\Models\Payment;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use App\Support\Audit;
 
 class PaymentController extends Controller
 {
@@ -45,7 +45,7 @@ class PaymentController extends Controller
         $payment = new Payment($data);
         $payment->forceFill(['created_by' => $request->user()->id])->save();
 
-        Log::info('payment.created', ['by' => $request->user()->email, 'payment' => $payment->id, 'amount' => $payment->amount_usd]);
+        Audit::record('payment.created', ['by' => $request->user()->email, 'payment' => $payment->id, 'amount' => $payment->amount_usd]);
 
         return back()->with('success', 'Payment saved.');
     }
@@ -53,7 +53,7 @@ class PaymentController extends Controller
     /** Admin only. A wrong entry is deleted and entered again; a refund is a negative amount. */
     public function destroy(Request $request, Payment $payment): RedirectResponse
     {
-        Log::info('payment.deleted', [
+        Audit::record('payment.deleted', [
             'by' => $request->user()->email, 'payment' => $payment->id,
             'company' => $payment->company_id, 'amount' => $payment->amount_usd, 'date' => $payment->paid_on->toDateString(),
         ]);

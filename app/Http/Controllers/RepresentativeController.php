@@ -9,7 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use App\Support\Audit;
 use Illuminate\Validation\Rule;
 
 /** The hotel representative's page: mark rooms as occupied or checked out. */
@@ -105,7 +105,7 @@ class RepresentativeController extends Controller
 
         $changed = $this->operations->mark($booking, array_map('intval', $data['rooms']), $data['action'], $user);
 
-        Log::info('rooms.marked', [
+        Audit::record('rooms.marked', [
             'by' => $user->email, 'booking' => $booking->id, 'action' => $data['action'], 'rooms' => $changed,
         ]);
 

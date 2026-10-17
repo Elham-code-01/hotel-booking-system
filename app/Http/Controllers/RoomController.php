@@ -7,7 +7,7 @@ use App\Models\Hotel;
 use App\Models\Room;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use App\Support\Audit;
 
 class RoomController extends Controller
 {
@@ -36,7 +36,7 @@ class RoomController extends Controller
             }
         }
 
-        Log::info('rooms.added', ['by' => $request->user()->email, 'hotel' => $hotel->id, 'count' => $created]);
+        Audit::record('rooms.added', ['by' => $request->user()->email, 'hotel' => $hotel->id, 'count' => $created]);
 
         return back()->with('success', $created.' room(s) added. Existing numbers were skipped.');
     }

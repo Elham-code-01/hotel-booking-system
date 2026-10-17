@@ -11,7 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use App\Support\Audit;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
@@ -65,7 +65,7 @@ class BookingController extends Controller
 
         $booking = $this->bookings->save($data, $rooms, null, $request->user());
 
-        Log::info('booking.created', ['by' => $request->user()->email, 'booking' => $booking->id, 'status' => $booking->status]);
+        Audit::record('booking.created', ['by' => $request->user()->email, 'booking' => $booking->id, 'status' => $booking->status]);
 
         return redirect()->route('bookings.index', $booking->hotel_id)
             ->with('success', 'Booking saved: '.count($rooms).' room(s).');
@@ -77,7 +77,7 @@ class BookingController extends Controller
 
         $this->bookings->save($data, $rooms, $booking, $request->user());
 
-        Log::info('booking.updated', ['by' => $request->user()->email, 'booking' => $booking->id, 'status' => $booking->status]);
+        Audit::record('booking.updated', ['by' => $request->user()->email, 'booking' => $booking->id, 'status' => $booking->status]);
 
         return redirect()->route('bookings.index', $booking->hotel_id)
             ->with('success', 'Booking #'.$booking->id.' saved.');

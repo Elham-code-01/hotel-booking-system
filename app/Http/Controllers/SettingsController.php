@@ -6,7 +6,7 @@ use App\Models\Setting;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use App\Support\Audit;
 
 class SettingsController extends Controller
 {
@@ -23,7 +23,7 @@ class SettingsController extends Controller
 
         Setting::put('exchange_rate', (string) $data['exchange_rate']);
 
-        Log::info('settings.updated', ['by' => $request->user()->email, 'exchange_rate' => $data['exchange_rate']]);
+        Audit::record('settings.updated', ['by' => $request->user()->email, 'exchange_rate' => $data['exchange_rate']]);
 
         return back()->with('success', 'Settings saved.');
     }

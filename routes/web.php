@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\AuditController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DashboardController;
@@ -9,21 +10,25 @@ use App\Http\Controllers\HotelManageController;
 use App\Http\Controllers\OtherChargeController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RepresentativeController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UserAdminController;
+use App\Http\Middleware\EnsurePasswordChanged;
 use App\Http\Middleware\EnsureRouteAccess;
 use App\Http\Middleware\EnsureUserIsActive;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/dashboard');
 
-Route::middleware(['auth', EnsureUserIsActive::class, EnsureRouteAccess::class])->group(function () {
+Route::middleware(['auth', EnsureUserIsActive::class, EnsurePasswordChanged::class, EnsureRouteAccess::class])->group(function () {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
     Route::get('/users', [UserAdminController::class, 'index'])->name('users.index');
     Route::patch('/users/{user}', [UserAdminController::class, 'update'])->name('users.update');
+    Route::post('/users/{user}/password', [UserAdminController::class, 'resetPassword'])->name('users.password');
+    Route::get('/audit', [AuditController::class, 'index'])->name('audit');
 
     // Placeholders: each one is replaced by a real controller in a later step.
     Route::get('/hotels/{hotel}/bookings', [BookingController::class, 'index'])->name('bookings.index');
@@ -61,7 +66,8 @@ Route::middleware(['auth', EnsureUserIsActive::class, EnsureRouteAccess::class])
 
     Route::get('/representative', [RepresentativeController::class, 'index'])->name('representative');
     Route::post('/representative/rooms', [RepresentativeController::class, 'update'])->name('representative.update');
-    Route::view('/reports', 'pages.placeholder', ['title' => 'Reports'])->name('reports');
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports');
+    Route::get('/reports/csv', [ReportController::class, 'csv'])->name('reports.csv');
 
     // No self-delete route: an administrator must not be able to remove their own account.
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

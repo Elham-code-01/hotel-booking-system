@@ -6,7 +6,7 @@ use App\Models\Company;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use App\Support\Audit;
 use Illuminate\Validation\Rule;
 
 class CompanyController extends Controller
@@ -40,7 +40,7 @@ class CompanyController extends Controller
             return back()->with('error', 'This company has bookings or payments, so it cannot be deleted.');
         }
 
-        Log::info('company.deleted', ['by' => $request->user()->email, 'company' => $company->name]);
+        Audit::record('company.deleted', ['by' => $request->user()->email, 'company' => $company->name]);
         $company->delete();
 
         return back()->with('success', 'Company deleted.');

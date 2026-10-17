@@ -7,7 +7,7 @@ use App\Models\Hotel;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use App\Support\Audit;
 use Illuminate\Validation\Rule;
 
 /** Add a hotel and manage its details and rooms (administrator only; see config/navigation.php). */
@@ -32,7 +32,7 @@ class HotelManageController extends Controller
 
         $hotel = Hotel::create($data + ['is_active' => true]);
 
-        Log::info('hotel.created', ['by' => $request->user()->email, 'hotel' => $hotel->id]);
+        Audit::record('hotel.created', ['by' => $request->user()->email, 'hotel' => $hotel->id]);
 
         return redirect()->route('hotels.manage', $hotel)
             ->with('success', $hotel->name.' was added. Now add its rooms below.');
@@ -69,7 +69,7 @@ class HotelManageController extends Controller
 
         $hotel->update($data);
 
-        Log::info('hotel.updated', ['by' => $request->user()->email, 'hotel' => $hotel->id]);
+        Audit::record('hotel.updated', ['by' => $request->user()->email, 'hotel' => $hotel->id]);
 
         return back()->with('success', 'Hotel details saved.');
     }

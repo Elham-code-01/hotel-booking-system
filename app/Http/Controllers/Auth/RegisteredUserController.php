@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Support\Audit;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -44,6 +45,8 @@ class RegisteredUserController extends Controller implements HasMiddleware
             'role'     => 'viewer',
             'status'   => 'pending',
         ])->save();
+
+        Audit::record('user.registered', ['email' => $data['email']]);
 
         return redirect()->route('login')->with(
             'status',

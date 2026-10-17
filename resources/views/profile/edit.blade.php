@@ -3,6 +3,10 @@
 
     <x-page-header title="My profile" sub="Change your name, email or password." />
 
+    @if ($user->must_change_password)
+        <div class="notice error" style="margin-bottom:16px">An administrator gave you a temporary password. Choose your own new password below before you continue.</div>
+    @endif
+
     <div class="grid cols-2">
         <x-panel title="Details">
             <form method="POST" action="{{ route('profile.update') }}">

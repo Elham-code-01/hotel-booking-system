@@ -9,7 +9,7 @@ use App\Models\Setting;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use App\Support\Audit;
 use Illuminate\Validation\Rule;
 
 class OtherChargeController extends Controller
@@ -45,14 +45,14 @@ class OtherChargeController extends Controller
             'created_by'    => $request->user()->id,
         ])->save();
 
-        Log::info('charge.created', ['by' => $request->user()->email, 'charge' => $charge->id]);
+        Audit::record('charge.created', ['by' => $request->user()->email, 'charge' => $charge->id]);
 
         return back()->with('success', 'Charge saved.');
     }
 
     public function destroy(Request $request, OtherCharge $otherCharge): RedirectResponse
     {
-        Log::info('charge.deleted', ['by' => $request->user()->email, 'charge' => $otherCharge->id, 'company' => $otherCharge->company_id]);
+        Audit::record('charge.deleted', ['by' => $request->user()->email, 'charge' => $otherCharge->id, 'company' => $otherCharge->company_id]);
 
         $otherCharge->delete();
 

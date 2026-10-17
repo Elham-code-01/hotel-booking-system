@@ -3,6 +3,15 @@
 
     <x-page-header title="Users" sub="Approve new accounts, choose their role, or block access." />
 
+    @if (session('temp_password'))
+        @php($temp = session('temp_password'))
+        <x-panel title="Temporary password">
+            <p>New password for <strong>{{ $temp['name'] }}</strong> ({{ $temp['email'] }}):</p>
+            <p style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:700;letter-spacing:.04em;margin:10px 0">{{ $temp['password'] }}</p>
+            <p class="muted">Write it down and give it to the user now. It is shown only once. The user was signed out everywhere and must choose a new password at the next sign-in.</p>
+        </x-panel>
+    @endif
+
     <x-panel title="Accounts">
         <div class="table-wrap">
             <table>
@@ -40,6 +49,13 @@
                                         <button type="submit" name="status" value="blocked" class="btn btn-sm btn-danger">Block</button>
                                     @endif
                                 </form>
+                                @unless ($user->is(auth()->user()))
+                                    <form method="POST" action="{{ route('users.password', $user) }}" style="margin-top:6px"
+                                          onsubmit="return confirm('Create a new temporary password for {{ e($user->name) }}? They will be signed out.')">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm">Reset password</button>
+                                    </form>
+                                @endunless
                             </td>
                         </tr>
                     @endforeach
