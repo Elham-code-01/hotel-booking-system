@@ -1,0 +1,30 @@
+# Nginx site for the hotel system. Replace example.com and the PHP socket name if needed.
+# Put it in /etc/nginx/sites-available/mutamireen, link it to sites-enabled, then: sudo nginx -t && sudo systemctl reload nginx
+# Then run: sudo certbot --nginx -d example.com   (it adds HTTPS and the redirect by itself)
+
+server {
+    listen 80;
+    server_name example.com;
+
+    # Only the "public" folder is reachable from the internet. The code, .env and backups are not.
+    root /var/www/mutamireen/public;
+    index index.php;
+    charset utf-8;
+    client_max_body_size 10M;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        fastcgi_pass unix:/run/php/php-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        include fastcgi_params;
+        fastcgi_hide_header X-Powered-By;
+    }
+
+    # Never serve hidden files (.env, .git), except the folder Let's Encrypt needs.
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+}
